@@ -22,3 +22,12 @@ npm run dev
 ```bash
 npm run build
 ```
+
+5. ビルドしたアプリを実行
+
+```bash
+npm run preview
+```
+
+起動後、ターミナルに表示される URL（通常は `http://localhost:4173`）をブラウザで開いてください。
+終了するには、ターミナルで `Ctrl+C` を押します。
