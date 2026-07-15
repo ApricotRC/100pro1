@@ -8,7 +8,7 @@ import { TransformSection } from "./components/TransformSection";
 import { TutorialSection } from "./components/TutorialSection";
 import { UploadSection } from "./components/UploadSection";
 import { useLocalStorageGallery } from "./hooks/useLocalStorageGallery";
-import { mockTransformImage } from "./utils/mockTransform";
+import { transformImage } from "./utils/transformImage";
 
 function downloadDataUrl(dataUrl: string, fileName: string): void {
   const anchor: HTMLAnchorElement = document.createElement("a");
@@ -121,7 +121,7 @@ export default function App(): JSX.Element {
     setErrorMessage(null);
     setIsTransforming(true);
     try {
-      const result = await mockTransformImage(sourcePreviewUrl);
+      const result = await transformImage(sourcePreviewUrl);
       setTransformedImageUrl(result.transformedDataUrl);
       setLineArtUrl(result.lineArtDataUrl);
       setTransformPaletteColors(result.paletteColors);
