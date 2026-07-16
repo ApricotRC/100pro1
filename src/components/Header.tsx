@@ -1,20 +1,26 @@
+import type { UserProfile } from "../types";
+
 interface HeaderProps {
-  onScrollToTutorial: () => void;
+  profile: UserProfile | null;
 }
 
-export function Header({ onScrollToTutorial }: HeaderProps): JSX.Element {
+export function Header({ profile }: HeaderProps): JSX.Element {
   return (
     <header className="panel-section header-section">
       <div>
-        <p className="eyebrow">Image Convert & Draw</p>
-        <h1>画像変換・お絵描きスタジオ</h1>
+        <h1>おえかきスタジオSNS</h1>
         <p className="section-copy">
-          画像を読み込み、線画を作り、キャンバスで仕上げまで進められます。
+          画像から線画を作って色を塗り、みんなのタイムラインに投稿しよう。
         </p>
       </div>
-      <button type="button" className="secondary-button" onClick={onScrollToTutorial}>
-        使い方へ
-      </button>
+      {profile ? (
+        <div className="header-profile" title="マイページで変更できます">
+          <span className="post-avatar" aria-hidden="true">
+            {profile.avatar}
+          </span>
+          <span className="header-profile-name">{profile.name}</span>
+        </div>
+      ) : null}
     </header>
   );
 }
