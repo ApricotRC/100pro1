@@ -4,9 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/dev.mjs",
+    "server": "node server/server.mjs",
     "build:wasm": "node scripts/build-wasm.mjs",
     "build": "npm run build:wasm && tsc -b && vite build",
+    "start": "node server/server.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

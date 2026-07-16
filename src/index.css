@@ -89,7 +89,7 @@ img {
 }
 
 .app-panel {
-  width: min(100%, 408px);
+  width: min(100%, 480px);
   display: grid;
   gap: 16px;
 }
@@ -107,15 +107,6 @@ img {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-}
-
-.eyebrow {
-  margin: 0 0 6px;
-  color: #0f6b67;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 h1,
@@ -492,4 +483,321 @@ h2 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
+}
+
+/* ---- タブナビゲーション ---- */
+
+.tab-bar {
+  position: sticky;
+  top: 8px;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(15, 107, 103, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(17, 43, 43, 0.1);
+}
+
+.tab-button {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 2px;
+  min-height: 56px;
+  padding: 6px 4px;
+  border-radius: 14px;
+  background: transparent;
+  color: #58706f;
+  font-weight: 700;
+}
+
+.tab-button.is-active {
+  background: #0f6b67;
+  color: #ffffff;
+}
+
+.tab-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.tab-label {
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.tab-panel {
+  display: grid;
+  gap: 16px;
+}
+
+/* display: grid が hidden 属性より優先されてしまうのを防ぐ */
+.tab-panel[hidden] {
+  display: none;
+}
+
+/* ---- ステップバッジ ---- */
+
+.step-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 26px;
+  height: 26px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #0f6b67;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+/* ---- ヘッダーのプロフィール表示 ---- */
+
+.header-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.header-profile-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f4c49;
+  max-width: 96px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- 入力欄の共通スタイル ---- */
+
+.profile-form,
+.comment-form {
+  display: grid;
+  gap: 12px;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(15, 107, 103, 0.22);
+  border-radius: 12px;
+  background: #ffffff;
+  color: #17302f;
+  resize: vertical;
+}
+
+/* ---- アイコン選択 ---- */
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.avatar-choice {
+  min-height: 44px;
+  padding: 0;
+  font-size: 1.35rem;
+  background: #f0f6f5;
+  border: 2px solid transparent;
+  border-radius: 14px;
+}
+
+.avatar-choice.is-selected {
+  border-color: #0f6b67;
+  background: #d9ecea;
+}
+
+/* ---- タイムライン ---- */
+
+.timeline-list {
+  display: grid;
+  gap: 14px;
+}
+
+.post-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  background: #f9fcfc;
+  border: 1px solid rgba(15, 107, 103, 0.1);
+  border-radius: 18px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-avatar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 1.35rem;
+  background: #e3efee;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.post-header-text {
+  display: grid;
+  min-width: 0;
+}
+
+.post-author,
+.comment-author {
+  font-weight: 800;
+  color: #17302f;
+}
+
+.post-time {
+  color: #6d8180;
+  font-size: 0.8rem;
+}
+
+.post-delete-button {
+  margin-left: auto;
+  min-height: 32px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #9a3d3d;
+  background: #f7e6e6;
+  border-radius: 999px;
+}
+
+.post-image {
+  width: 100%;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 107, 103, 0.1);
+}
+
+.post-caption {
+  color: #2b4443;
+  overflow-wrap: anywhere;
+}
+
+.post-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.like-button,
+.comment-toggle-button {
+  min-height: 38px;
+  padding: 6px 14px;
+  font-weight: 800;
+  background: #eef4f4;
+  color: #0f4c49;
+  border-radius: 999px;
+}
+
+.like-button.is-liked {
+  background: #ffe3ea;
+  color: #b33455;
+}
+
+/* ---- コメント ---- */
+
+.post-comments {
+  display: grid;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(15, 107, 103, 0.18);
+}
+
+.comment-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.comment-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.comment-avatar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  font-size: 1rem;
+  background: #e3efee;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.comment-author {
+  font-size: 0.9rem;
+}
+
+.comment-text {
+  color: #2b4443;
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.comment-form {
+  grid-template-columns: 1fr auto;
+  align-items: start;
+}
+
+.comment-form input {
+  min-width: 0;
+}
+
+/* ---- 投稿モーダル ---- */
+
+.post-modal-card {
+  max-height: min(90vh, 640px);
+  overflow-y: auto;
+}
+
+.post-modal-preview {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  background: #f0f6f5;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 107, 103, 0.12);
+}
+
+/* ---- ギャラリーカード ---- */
+
+.gallery-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 10px;
+}
+
+.gallery-card-footer .gallery-date {
+  padding: 0;
+}
+
+.gallery-share-button {
+  min-height: 32px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
 }

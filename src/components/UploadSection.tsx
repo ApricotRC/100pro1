@@ -26,7 +26,9 @@ export function UploadSection({
   return (
     <section className="panel-section" aria-labelledby="upload-heading">
       <div className="section-heading">
-        <h2 id="upload-heading">きょうの画像</h2>
+        <h2 id="upload-heading">
+          <span className="step-badge">1</span>画像をえらぶ
+        </h2>
         <span className="section-note">アップロードして準備</span>
       </div>
       <div className="upload-row">

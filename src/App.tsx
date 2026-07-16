@@ -1,13 +1,18 @@
-import { ChangeEvent, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { ConfirmationModal } from "./components/ConfirmationModal";
 import { DownloadSection } from "./components/DownloadSection";
 import { DrawSection } from "./components/DrawSection";
 import { GallerySection } from "./components/GallerySection";
 import { Header } from "./components/Header";
+import { PostModal } from "./components/PostModal";
+import { ProfileSection } from "./components/ProfileSection";
+import { TabBar, type TabId } from "./components/TabBar";
+import { TimelineSection } from "./components/TimelineSection";
 import { TransformSection } from "./components/TransformSection";
 import { TutorialSection } from "./components/TutorialSection";
 import { UploadSection } from "./components/UploadSection";
 import { useLocalStorageGallery } from "./hooks/useLocalStorageGallery";
+import { useProfile } from "./hooks/useProfile";
 import { transformImage } from "./utils/transformImage";
 
 function downloadDataUrl(dataUrl: string, fileName: string): void {
@@ -18,7 +23,7 @@ function downloadDataUrl(dataUrl: string, fileName: string): void {
 }
 
 export default function App(): JSX.Element {
-  const tutorialRef = useRef<HTMLElement | null>(null);
+  const [activeTab, setActiveTab] = useState<TabId>("create");
   const [sourcePreviewUrl, setSourcePreviewUrl] = useState<string | null>(null);
   const [sourceFileName, setSourceFileName] = useState<string | null>(null);
   const [transformedImageUrl, setTransformedImageUrl] = useState<string | null>(null);
@@ -26,21 +31,16 @@ export default function App(): JSX.Element {
   const [transformPaletteColors, setTransformPaletteColors] = useState<string[]>([]);
   const [drawExportUrl, setDrawExportUrl] = useState<string | null>(null);
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
-  const [galleryOpen, setGalleryOpen] = useState<boolean>(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+  const [postModalImage, setPostModalImage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [timelineRefreshKey, setTimelineRefreshKey] = useState<number>(0);
   const [galleryItems, addGalleryItem] = useLocalStorageGallery();
+  const [profile, setProfile] = useProfile();
 
   const activePreviewUrl: string | null = useMemo(() => {
     return transformedImageUrl ?? sourcePreviewUrl;
   }, [sourcePreviewUrl, transformedImageUrl]);
-
-  const handleScrollToTutorial = (): void => {
-    tutorialRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
 
   const loadImageFile = (file: File, label: string): void => {
     const acceptedTypes: string[] = ["image/jpeg", "image/png", "image/webp"];
@@ -157,60 +157,99 @@ export default function App(): JSX.Element {
 
     addGalleryItem(drawExportUrl);
     downloadDataUrl(drawExportUrl, "finished-artwork.png");
-    setGalleryOpen(true);
     setIsConfirmOpen(false);
+    // 保存が終わったら、そのままタイムラインへの投稿を提案する。
+    setPostModalImage(drawExportUrl);
+  };
+
+  const handlePosted = (): void => {
+    setPostModalImage(null);
+    setTimelineRefreshKey((current) => current + 1);
+    setActiveTab("timeline");
   };
 
   return (
     <div className="page-shell">
       <main className="app-panel">
-        <Header onScrollToTutorial={handleScrollToTutorial} />
-        <UploadSection
-          fileName={sourceFileName}
-          previewUrl={sourcePreviewUrl}
-          errorMessage={errorMessage}
-          onFileChange={handleFileChange}
-          onPasteFromClipboard={handlePasteFromClipboard}
-        />
-        <TransformSection
-          previewUrl={activePreviewUrl}
-          isTransforming={isTransforming}
-          onTransform={handleTransform}
-          canTransform={Boolean(sourcePreviewUrl) && !isTransforming}
-        />
-        <DownloadSection
-          onDownloadLineArt={handleDownloadLineArt}
-          onDownloadImage={handleDownloadImage}
-          hasLineArt={Boolean(lineArtUrl)}
-          hasImage={Boolean(activePreviewUrl)}
-        />
-        <DrawSection
-          baseImageUrl={lineArtUrl}
-          colorPalette={transformPaletteColors}
-          onExportReady={setDrawExportUrl}
-        />
-        <section className="panel-section" aria-labelledby="finish-heading">
-          <div className="section-heading">
-            <h2 id="finish-heading">完成確認</h2>
-          </div>
-          <button
-            type="button"
-            className="primary-button full-width"
-            onClick={() => setIsConfirmOpen(true)}
-            disabled={!drawExportUrl}
-          >
-            完成！
-          </button>
-        </section>
-        <GallerySection items={galleryItems} isOpen={galleryOpen} onToggle={() => setGalleryOpen((current) => !current)} />
-        <section ref={tutorialRef}>
-          <TutorialSection />
-        </section>
+        <Header profile={profile} />
+        <TabBar activeTab={activeTab} onSelect={setActiveTab} />
+
+        {/* つくるタブ: キャンバスの状態を保つため hidden で隠すだけにする */}
+        <div className="tab-panel" hidden={activeTab !== "create"}>
+          <UploadSection
+            fileName={sourceFileName}
+            previewUrl={sourcePreviewUrl}
+            errorMessage={errorMessage}
+            onFileChange={handleFileChange}
+            onPasteFromClipboard={handlePasteFromClipboard}
+          />
+          <TransformSection
+            previewUrl={activePreviewUrl}
+            isTransforming={isTransforming}
+            onTransform={handleTransform}
+            canTransform={Boolean(sourcePreviewUrl) && !isTransforming}
+          />
+          <DrawSection
+            baseImageUrl={lineArtUrl}
+            colorPalette={transformPaletteColors}
+            onExportReady={setDrawExportUrl}
+          />
+          <section className="panel-section" aria-labelledby="finish-heading">
+            <div className="section-heading">
+              <h2 id="finish-heading">
+                <span className="step-badge">4</span>完成・投稿
+              </h2>
+              <span className="section-note">保存してタイムラインへ</span>
+            </div>
+            <button
+              type="button"
+              className="primary-button full-width"
+              onClick={() => setIsConfirmOpen(true)}
+              disabled={!drawExportUrl}
+            >
+              完成！
+            </button>
+            {!drawExportUrl ? (
+              <p className="helper-text">キャンバスに描くと完成ボタンが押せるようになります。</p>
+            ) : null}
+          </section>
+          <DownloadSection
+            onDownloadLineArt={handleDownloadLineArt}
+            onDownloadImage={handleDownloadImage}
+            hasLineArt={Boolean(lineArtUrl)}
+            hasImage={Boolean(activePreviewUrl)}
+          />
+        </div>
+
+        {activeTab === "timeline" ? (
+          <TimelineSection
+            profile={profile}
+            refreshKey={timelineRefreshKey}
+            onRequireProfile={() => setActiveTab("mypage")}
+          />
+        ) : null}
+
+        {activeTab === "mypage" ? (
+          <>
+            <ProfileSection profile={profile} onSave={setProfile} />
+            <GallerySection items={galleryItems} onShare={setPostModalImage} />
+          </>
+        ) : null}
+
+        {activeTab === "help" ? <TutorialSection /> : null}
       </main>
       <ConfirmationModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={handleConfirmFinish}
+      />
+      <PostModal
+        isOpen={postModalImage !== null}
+        imageDataUrl={postModalImage}
+        profile={profile}
+        onSaveProfile={setProfile}
+        onClose={() => setPostModalImage(null)}
+        onPosted={handlePosted}
       />
     </div>
   );

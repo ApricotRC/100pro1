@@ -14,7 +14,9 @@ export function TransformSection({
   return (
     <section className="panel-section" aria-labelledby="transform-heading">
       <div className="section-heading">
-        <h2 id="transform-heading">画像変換</h2>
+        <h2 id="transform-heading">
+          <span className="step-badge">2</span>線画に変換
+        </h2>
         <span className="section-note">大きなプレビュー</span>
       </div>
       <div className="preview-card">

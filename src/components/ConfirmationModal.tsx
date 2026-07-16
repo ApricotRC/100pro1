@@ -41,7 +41,9 @@ export function ConfirmationModal({
         onClick={(event) => event.stopPropagation()}
       >
         <h2 id="confirm-title">本当に完成させていい？</h2>
-        <p id="confirm-description">完成した画像をPNGとしてギャラリーに保存します。</p>
+        <p id="confirm-description">
+          完成した画像をPNGとして保存します。そのあと、タイムラインへの投稿もできます。
+        </p>
         <div className="button-grid">
           <button type="button" className="secondary-button" onClick={onClose}>
             もうちょっと続ける

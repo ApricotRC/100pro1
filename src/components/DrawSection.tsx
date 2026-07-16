@@ -435,8 +435,10 @@ export function DrawSection({
   return (
     <section className="panel-section" aria-labelledby="draw-heading">
       <div className="section-heading">
-        <h2 id="draw-heading">ここで描く</h2>
-        <span className="section-note">Pointer Events対応</span>
+        <h2 id="draw-heading">
+          <span className="step-badge">3</span>色をぬる
+        </h2>
+        <span className="section-note">指でもペンでも描けます</span>
       </div>
       <div className="toolbar-row">
         <button

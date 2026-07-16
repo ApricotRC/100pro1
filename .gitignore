@@ -12,6 +12,9 @@ coverage/
 # Downloaded toolchains
 .tools/
 
+# SNS server data (posts and uploaded images)
+server/data/
+
 # Logs
 *.log
 npm-debug.log*
